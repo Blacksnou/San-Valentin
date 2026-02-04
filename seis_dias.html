@@ -1,0 +1,1791 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seis días. Una pregunta.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Tenor+Sans&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-bg: #fdfbf7;
+            --secondary-bg: #f8f4ed;
+            --text-primary: #2c2420;
+            --text-secondary: #6b6158;
+            --accent: #d4a574;
+            --accent-light: #e8d5c4;
+            --heart: #c8948f;
+            --locked: #bfb5ab;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tenor Sans', sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            position: relative;
+            opacity: 0;
+            animation: fadeIn 1.2s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+        }
+
+        .intro-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            line-height: 2;
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            font-weight: 300;
+        }
+
+        .intro-text p {
+            margin-bottom: 1.5rem;
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.8rem;
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 1rem;
+            letter-spacing: 0.02em;
+        }
+
+        h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            letter-spacing: 0.01em;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            font-style: italic;
+        }
+
+        .day-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--accent-light);
+        }
+
+        .day-title {
+            font-size: 0.9rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .day-phrase {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.4rem;
+            font-weight: 300;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        .section {
+            background: var(--secondary-bg);
+            padding: 2.5rem;
+            border-radius: 4px;
+            margin-bottom: 2rem;
+            border: 1px solid var(--accent-light);
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hint-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            background: var(--accent);
+            color: var(--primary-bg);
+            border: none;
+            padding: 1rem 3rem;
+            font-family: 'Tenor Sans', sans-serif;
+            font-size: 0.95rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 2rem auto 0;
+        }
+
+        .btn:hover {
+            background: var(--text-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .btn:disabled {
+            background: var(--locked);
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 1rem;
+            font-family: 'Tenor Sans', sans-serif;
+            font-size: 1rem;
+            border: 2px solid var(--accent-light);
+            border-radius: 2px;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            transition: border-color 0.3s ease;
+            text-align: center;
+            letter-spacing: 0.05em;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .wordle-grid {
+            display: grid;
+            gap: 0.4rem;
+            margin: 2rem 0;
+            justify-content: center;
+        }
+
+        .wordle-row {
+            display: grid;
+            grid-template-columns: repeat(5, 3.5rem);
+            gap: 0.4rem;
+        }
+
+        .wordle-cell {
+            width: 3.5rem;
+            height: 3.5rem;
+            border: 2px solid var(--accent-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            background: var(--primary-bg);
+            transition: all 0.3s ease;
+        }
+
+        .wordle-cell.correct {
+            background: #8fae9a;
+            border-color: #8fae9a;
+            color: white;
+        }
+
+        .wordle-cell.present {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .wordle-cell.absent {
+            background: var(--locked);
+            border-color: var(--locked);
+            color: white;
+        }
+
+        .keyboard {
+            display: grid;
+            gap: 0.4rem;
+            margin-top: 2rem;
+        }
+
+        .keyboard-row {
+            display: flex;
+            gap: 0.4rem;
+            justify-content: center;
+        }
+
+        .key {
+            padding: 1rem 0.8rem;
+            background: var(--secondary-bg);
+            border: 1px solid var(--accent-light);
+            border-radius: 2px;
+            cursor: pointer;
+            font-family: 'Tenor Sans', sans-serif;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            min-width: 2.5rem;
+            text-align: center;
+        }
+
+        .key:hover {
+            background: var(--accent-light);
+        }
+
+        .key.wide {
+            min-width: 4rem;
+        }
+
+        .connections-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin: 2rem 0;
+        }
+
+        .connection-word {
+            padding: 1.5rem 0.5rem;
+            background: var(--secondary-bg);
+            border: 2px solid var(--accent-light);
+            border-radius: 2px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+        }
+
+        .connection-word:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .connection-word.selected {
+            background: var(--accent);
+            color: var(--primary-bg);
+            border-color: var(--accent);
+        }
+
+        .connection-word.solved {
+            cursor: default;
+            color: white;
+        }
+
+        .connection-word.solved:hover {
+            transform: none;
+        }
+
+        .solved-group {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            padding: 1.5rem;
+            border-radius: 2px;
+            text-align: center;
+        }
+
+        .solved-group.purple { background: #a294b5; }
+        .solved-group.blue { background: #7ba3c4; }
+        .solved-group.green { background: #8fae9a; }
+        .solved-group.yellow { background: var(--accent); }
+
+        .emoji-grid {
+            display: grid;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .emoji-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .emoji-display {
+            font-size: 2rem;
+            min-width: 120px;
+        }
+
+        .word-search-container {
+            margin: 2rem 0;
+        }
+
+        .word-search-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 2.2rem);
+            gap: 0.15rem;
+            margin: 2rem auto;
+            justify-content: center;
+            user-select: none;
+        }
+
+        .ws-cell {
+            width: 2.2rem;
+            height: 2.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--secondary-bg);
+            border: 1px solid var(--accent-light);
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .ws-cell.selected {
+            background: var(--accent-light);
+        }
+
+        .ws-cell.found {
+            background: #8fae9a;
+            color: white;
+            border-color: #8fae9a;
+        }
+
+        .words-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+
+        .word-item {
+            padding: 0.5rem 1rem;
+            background: var(--secondary-bg);
+            border-radius: 2px;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+        }
+
+        .word-item.found {
+            background: #8fae9a;
+            color: white;
+            text-decoration: line-through;
+        }
+
+        .maze-container {
+            margin: 2rem 0;
+        }
+
+        .maze-question {
+            background: var(--secondary-bg);
+            padding: 2rem;
+            border-radius: 2px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--accent-light);
+        }
+
+        .maze-question-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .maze-options {
+            display: grid;
+            gap: 0.8rem;
+        }
+
+        .maze-option {
+            padding: 1rem 1.5rem;
+            background: var(--primary-bg);
+            border: 2px solid var(--accent-light);
+            border-radius: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .maze-option:hover {
+            border-color: var(--accent);
+            transform: translateX(4px);
+        }
+
+        .maze-option.correct {
+            border-color: #8fae9a;
+            background: #f0f5f2;
+        }
+
+        .maze-option.incorrect {
+            border-color: #c8948f;
+            background: #faf5f4;
+        }
+
+        .maze-progress {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .progress-dot {
+            width: 0.8rem;
+            height: 0.8rem;
+            border-radius: 50%;
+            background: var(--accent-light);
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: var(--accent);
+        }
+
+        .progress-dot.completed {
+            background: #8fae9a;
+        }
+
+        .reward-box, .tomorrow-box {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+            margin-top: 2rem;
+        }
+
+        .reward-box.visible, .tomorrow-box.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .locked-message {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .locked-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.3;
+        }
+
+        .locked-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 2px;
+            margin-top: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .message.error {
+            background: #faf5f4;
+            color: #c8948f;
+            border: 1px solid #c8948f;
+        }
+
+        .message.success {
+            background: #f0f5f2;
+            color: #8fae9a;
+            border: 1px solid #8fae9a;
+        }
+
+        .final-message {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: var(--secondary-bg);
+            border-radius: 4px;
+            border: 1px solid var(--accent-light);
+        }
+
+        .final-message h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+        }
+
+        .final-message p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .attempts-left {
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--accent-light);
+        }
+
+        .nav-btn {
+            background: var(--secondary-bg);
+            color: var(--text-primary);
+            border: 2px solid var(--accent-light);
+            padding: 0.8rem 2rem;
+            font-family: 'Tenor Sans', sans-serif;
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- PÁGINA DE INICIO -->
+    <div id="intro-page" class="page">
+        <div class="container">
+            <h1>Seis días. Una pregunta.</h1>
+            <div class="subtitle">No es un juego</div>
+            
+            <div class="intro-text">
+                <p>Es una excusa para hacer más lentos los días<br>y más especial el final.</p>
+            </div>
+
+            <div class="section">
+                <h2 style="text-align: center; margin-bottom: 2rem;">Antes de empezar</h2>
+                
+                <div class="intro-text" style="text-align: left;">
+                    <p>Durante los próximos días no tendrás todas las respuestas de golpe.</p>
+                    <p>Habrá palabras sueltas, elecciones pequeñas y alguna que otra duda.</p>
+                    <p>No es una prueba ni un juego para ganar.</p>
+                    <p>Es solo una forma distinta de decirte<br>
+                    que hay planes que merecen hacerse despacio<br>
+                    y personas con las que apetece quedarse un poco más.</p>
+                    <p>Cada día guarda lo que descubras.<br>
+                    Todo tendrá sentido al final💙.</p>
+                </div>
+            </div>
+
+            <button class="btn" onclick="startJourney()">Empezar</button>
+        </div>
+    </div>
+
+    <!-- DÍA 1: WORDLE -->
+    <div id="day1-page" class="page hidden">
+        <div class="container">
+            <div class="day-header">
+                <div class="day-title">🟢 Día 1 · Lunes 9 de febrero</div>
+                <div class="day-phrase">Hay preguntas que no se hacen de golpe</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">🔐 El reto</div>
+                <div class="hint-text">
+                    <strong>Tienes 6 intentos para descubrir una palabra de 5 letras.</strong>
+                </div>
+                <div class="hint-text">
+                    <em>Pista inicial:</em><br>
+                    No es la respuesta.<br>
+                    Es lo que se da cuando importa.
+                </div>
+
+                <div class="wordle-grid" id="wordle-grid"></div>
+                <div class="keyboard" id="keyboard"></div>
+                <div class="attempts-left" id="attempts">Intentos restantes: 6</div>
+                <div id="wordle-message"></div>
+            </div>
+
+            <div id="day1-reward" class="section reward-box">
+                <div class="section-title">🎁 Recompensa</div>
+                <div class="hint-text">
+                    <strong>QUIERES</strong>
+                </div>
+                <div class="hint-text">
+                    No es una palabra cualquiera.<br><br>
+                    Es el inicio de algo que solo tiene sentido<br>
+                    si importa la respuesta.
+                </div>
+            </div>
+
+            <div id="day1-tomorrow" class="section tomorrow-box">
+                <div class="section-title">⏭️ Mañana</div>
+                <div class="hint-text">
+                    Mañana no será una pregunta.<br>
+                    Será una intención.
+                </div>
+            </div>
+
+            <div class="navigation-buttons">
+                <button class="nav-btn" onclick="loadDay(0)" disabled>← Anterior</button>
+                <button class="nav-btn" onclick="loadDay(2)">Siguiente →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DÍA 2: CONNECTIONS -->
+    <div id="day2-page" class="page hidden">
+        <div class="container">
+            <div class="day-header">
+                <div class="day-title">🟢 Día 2 · Martes 10 de febrero</div>
+                <div class="day-phrase">A veces elegir también dice cosas</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">🔐 El reto</div>
+                <div class="hint-text">
+                    <strong>Encuentra los cuatro grupos de palabras relacionadas.</strong><br>
+                    Selecciona 4 palabras y envía tu grupo.
+                </div>
+
+                <div id="solved-groups"></div>
+                <div class="connections-grid" id="connections-grid"></div>
+                <button class="btn" id="submit-group" onclick="submitGroup()">Enviar grupo</button>
+                <div class="attempts-left" id="connections-attempts">Intentos restantes: 4</div>
+                <div id="connections-message"></div>
+            </div>
+
+            <div id="day2-reward" class="section reward-box">
+                <div class="section-title">🎁 Recompensa</div>
+                <div class="hint-text">
+                    <strong>SALIR</strong>
+                </div>
+                <div class="hint-text">
+                    Dos personas.<br>
+                    Un plan sencillo.<br><br>
+                    A veces no hace falta nada más.
+                </div>
+            </div>
+
+            <div id="day2-tomorrow" class="section tomorrow-box">
+                <div class="section-title">⏭️ Mañana</div>
+                <div class="hint-text">
+                    Mañana habrá que leer con más calma.
+                </div>
+            </div>
+
+            <div class="navigation-buttons">
+                <button class="nav-btn" onclick="loadDay(1)">← Anterior</button>
+                <button class="nav-btn" onclick="loadDay(3)">Siguiente →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DÍA 3: ADIVINANZA + CIFRADO -->
+    <div id="day3-page" class="page hidden">
+        <div class="container">
+            <div class="day-header">
+                <div class="day-title">🟢 Día 3 · Miércoles 11 de febrero</div>
+                <div class="day-phrase">Hay cosas que no se dicen a la primera</div>
+            </div>
+
+            <div class="section" id="day3-part1">
+                <div class="section-title">🔐 El reto · Parte 1</div>
+                <div class="hint-text">
+                    <strong>Lee despacio.</strong>
+                </div>
+                <div class="hint-text" style="line-height: 2;">
+                    No soy un lugar al que se llega,<br>
+                    pero sin mí no hay destino.<br><br>
+                    No soy un plan,<br>
+                    pero sin mí ningún plan importa.<br><br>
+                    No soy una persona,<br>
+                    pero existo solo cuando somos dos.<br><br>
+                    No aparezco en las fotos,<br>
+                    pero si falto, se nota.<br><br>
+                    No se me invita,<br>
+                    se me elige.<br><br>
+                    Cuando me dices,<br>
+                    ya no caminas sola.
+                </div>
+                <input type="text" class="input-field" id="riddle-answer" placeholder="Tu respuesta...">
+                <button class="btn" onclick="checkRiddle()">Comprobar</button>
+                <div id="riddle-message"></div>
+            </div>
+
+            <div class="section hidden" id="day3-part2">
+                <div class="section-title">🔐 El reto · Parte 2</div>
+                <div class="hint-text">
+                    <strong>Descifra el mensaje:</strong>
+                </div>
+                <div class="hint-text" style="font-size: 1.5rem; text-align: center; letter-spacing: 0.2em; margin: 2rem 0;">
+                    TBO WBMFOUÓO
+                </div>
+                <div class="hint-text">
+                    <em>Pista:</em><br>
+                    Cada letra está un paso por delante<br>
+                    de donde debería estar.
+                </div>
+                <input type="text" class="input-field" id="cipher-answer" placeholder="Mensaje descifrado...">
+                <button class="btn" onclick="checkCipher()">Comprobar</button>
+                <div id="cipher-message"></div>
+            </div>
+
+            <div id="day3-reward" class="section reward-box">
+                <div class="section-title">🎁 Recompensa</div>
+                <div class="hint-text">
+                    <strong>CONMIGO · SAN VALENTÍN</strong>
+                </div>
+                <div class="hint-text">
+                    Algunas preguntas no se hacen de golpe.<br><br>
+                    Se construyen.<br><br>
+                    <strong style="font-size: 1.2rem;">¿QUIERES SALIR CONMIGO ESTE SAN VALENTÍN?</strong>
+                </div>
+            </div>
+
+            <div id="day3-tomorrow" class="section tomorrow-box">
+                <div class="section-title">⏭️ Mañana</div>
+                <div class="hint-text">
+                    Si la respuesta es sí,<br>
+                    mañana empezamos a imaginar el lugar.
+                </div>
+            </div>
+
+            <div class="navigation-buttons">
+                <button class="nav-btn" onclick="loadDay(2)">← Anterior</button>
+                <button class="nav-btn" onclick="loadDay(4)">Siguiente →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DÍA 4: EMOJIS + SOPA DE LETRAS -->
+    <div id="day4-page" class="page hidden">
+        <div class="container">
+            <div class="day-header">
+                <div class="day-title">🟢 Día 4 · Jueves 12 de febrero</div>
+                <div class="day-phrase">No todos los sitios son iguales</div>
+            </div>
+
+            <div class="section" style="background: var(--accent-light); border-color: var(--accent);">
+                <h2 style="text-align: center; margin-bottom: 2rem; font-size: 1.6rem;">A partir de hoy</h2>
+                
+                <div class="hint-text" style="text-align: left; line-height: 2;">
+                    <p>Hasta ahora has ido descubriendo una pregunta.</p>
+                    <p>Desde hoy empiezas a descubrir un sitio.</p>
+                    <p>No un nombre todavía, sino la idea de un lugar al que apetece ir sin mirar el reloj.</p>
+                    <p>Durante los próximos días cada pista hablará menos de palabras y más de sensaciones.</p>
+                    <p>Al final no importará tanto dónde es, sino con quién.</p>
+                </div>
+            </div>
+
+            <div class="section" id="day4-part1">
+                <div class="section-title">🔐 El reto · Parte 1</div>
+                <div class="hint-text">
+                    <strong>Adivina qué platos son:</strong>
+                </div>
+                
+                <div class="emoji-grid">
+                    <div class="emoji-item">
+                        <div class="emoji-display">🥘🍚🦐</div>
+                        <input type="text" class="input-field" id="emoji1" placeholder="¿Qué plato es?" style="max-width: 200px;">
+                    </div>
+                    <div class="emoji-item">
+                        <div class="emoji-display">🥔🥚</div>
+                        <input type="text" class="input-field" id="emoji2" placeholder="¿Qué plato es?" style="max-width: 200px;">
+                    </div>
+                    <div class="emoji-item">
+                        <div class="emoji-display">🍅🥒🧊</div>
+                        <input type="text" class="input-field" id="emoji3" placeholder="¿Qué plato es?" style="max-width: 200px;">
+                    </div>
+                    <div class="emoji-item">
+                        <div class="emoji-display">🍖🐷</div>
+                        <input type="text" class="input-field" id="emoji4" placeholder="¿Qué plato es?" style="max-width: 200px;">
+                    </div>
+                </div>
+                
+                <button class="btn" onclick="checkEmojis()">Comprobar respuestas</button>
+                <div id="emoji-message"></div>
+            </div>
+
+            <div class="section hidden" id="day4-part2">
+                <div class="section-title">🔐 El reto · Parte 2</div>
+                <div class="hint-text">
+                    <strong>Encuentra las 5 palabras escondidas:</strong>
+                </div>
+                
+                <div class="word-search-container">
+                    <div class="word-search-grid" id="word-search"></div>
+                    <div class="words-list" id="words-to-find"></div>
+                </div>
+                
+                <div id="ws-complete" class="hidden">
+                    <div class="hint-text" style="text-align: center; margin-top: 2rem;">
+                        <strong>¿De qué cocina son todos estos platos?</strong>
+                    </div>
+                    <input type="text" class="input-field" id="cuisine-answer" placeholder="Tu respuesta...">
+                    <button class="btn" onclick="checkCuisine()">Comprobar</button>
+                    <div id="cuisine-message"></div>
+                </div>
+            </div>
+
+            <div id="day4-reward" class="section reward-box">
+                <div class="section-title">🎁 Recompensa</div>
+                <div class="hint-text">
+                    <strong>COCINA ESPAÑOLA</strong>
+                </div>
+                <div class="hint-text">
+                    Hay sabores que se entienden mejor<br>
+                    cuando se comparten.
+                </div>
+            </div>
+
+            <div id="day4-tomorrow" class="section tomorrow-box">
+                <div class="section-title">⏭️ Mañana</div>
+                <div class="hint-text">
+                    Mañana no hablaremos de comida.<br>
+                    Hablaremos de cómo se siente el lugar.
+                </div>
+            </div>
+
+            <div class="navigation-buttons">
+                <button class="nav-btn" onclick="loadDay(3)">← Anterior</button>
+                <button class="nav-btn" onclick="loadDay(5)">Siguiente →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DÍA 5: LABERINTO -->
+    <div id="day5-page" class="page hidden">
+        <div class="container">
+            <div class="day-header">
+                <div class="day-title">🟢 Día 5 · Viernes 13 de febrero</div>
+                <div class="day-phrase">Elegir también es una forma de imaginar</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">🔐 El reto · Cadena de decisiones</div>
+                <div class="hint-text">
+                    <strong>Solo si todas encajan, se desbloquea la pista.</strong>
+                </div>
+
+                <div class="maze-progress" id="maze-progress"></div>
+                <div class="maze-container" id="maze-container"></div>
+                <div id="maze-message"></div>
+            </div>
+
+            <div id="day5-reward" class="section reward-box">
+                <div class="section-title">🎁 Recompensa</div>
+                <div class="hint-text">
+                    No es un sitio para pasar.<br><br>
+                    Es un sitio para quedarse.
+                </div>
+            </div>
+
+            <div id="day5-tomorrow" class="section tomorrow-box">
+                <div class="section-title">⏭️ Mañana</div>
+                <div class="hint-text">
+                    Mañana ya no habrá pistas.<br>
+                    Habrá un lugar.
+                </div>
+            </div>
+
+            <div class="navigation-buttons">
+                <button class="nav-btn" onclick="loadDay(4)">← Anterior</button>
+                <button class="nav-btn" onclick="loadDay(6)">Siguiente →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DÍA 6: ACRÓSTICO FINAL -->
+    <div id="day6-page" class="page hidden">
+        <div class="container">
+            <div class="day-header">
+                <div class="day-title">🟢 Día 6 · Sábado 14 de febrero</div>
+                <div class="day-phrase">El lugar</div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">🔐 El reto · Búsqueda final</div>
+                <div class="hint-text">
+                    <strong>Para llegar al final, tienes que descubrir el nombre del sitio.</strong>
+                </div>
+                <div class="hint-text" style="line-height: 2.2; margin: 2rem 0;">
+                    <strong>A</strong>mbiente tranquilo<br>
+                    <strong>L</strong>uz cálida al caer la noche<br>
+                    <strong>B</strong>ocados que saben a quedarse<br>
+                    <strong>E</strong>spacio para hablar sin prisa<br>
+                    <strong>D</strong>etalles cuidados<br>
+                    <strong>R</strong>isas que encajan<br>
+                    <strong>Í</strong>ntimo sin ser pequeño<br>
+                    <strong>O</strong>casión para compartir
+                </div>
+                <div class="hint-text" style="text-align: center; font-style: italic;">
+                    <em>No es una palabra común.<br>
+                    Es una elección.</em>
+                </div>
+                <input type="text" class="input-field" id="final-answer" placeholder="El nombre del lugar...">
+                <button class="btn" onclick="checkFinalAnswer()">Revelar</button>
+                <div id="final-message"></div>
+            </div>
+
+            <div id="day6-reward" class="section reward-box">
+                <div class="section-title">🎁 Recompensa</div>
+                <div class="hint-text">
+                    <strong>ALBEDRÍO</strong>
+                </div>
+                <div class="hint-text">
+                    Murcia.<br>
+                    Plaza de Santa Eulalia.
+                </div>
+            </div>
+
+            <div id="day6-final" class="section tomorrow-box">
+                <div class="section-title">✨ Mensaje final</div>
+                <div class="final-message">
+                    <h3>Sábado 14 de febrero</h3>
+                    <p><strong>A las 21:30</strong></p>
+                    <p><strong>En Albedrío</strong></p>
+                    <p style="margin-top: 2rem;">Yo llevo las ganas.<br>Tú solo di que sí.</p>
+                </div>
+            </div>
+
+            <div class="navigation-buttons">
+                <button class="nav-btn" onclick="loadDay(5)">← Anterior</button>
+                <button class="nav-btn" onclick="loadDay(7)" disabled>Siguiente →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // CONFIGURACIÓN DE FECHAS
+        const dayDates = {
+            1: new Date('2026-02-09T00:00:00'),
+            2: new Date('2026-02-10T00:00:00'),
+            3: new Date('2026-02-11T00:00:00'),
+            4: new Date('2026-02-12T00:00:00'),
+            5: new Date('2026-02-13T00:00:00'),
+            6: new Date('2026-02-14T00:00:00')
+        };
+
+        // SISTEMA DE PROGRESO
+        let progress = JSON.parse(localStorage.getItem('journeyProgress')) || {
+            currentDay: 0,
+            completedDays: [],
+            started: false
+        };
+
+        function saveProgress() {
+            localStorage.setItem('journeyProgress', JSON.stringify(progress));
+        }
+
+        function startJourney() {
+            progress.started = true;
+            progress.currentDay = 1;
+            saveProgress();
+            document.getElementById('intro-page').classList.add('hidden');
+            loadDay(1);
+        }
+
+        function isDayUnlocked(day) {
+            const now = new Date();
+            return now >= dayDates[day];
+        }
+
+        function loadDay(day) {
+            if (!isDayUnlocked(day)) {
+                showLockedMessage(day);
+                return;
+            }
+
+            // Ocultar todas las páginas
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            
+            // Mostrar la página del día
+            const dayPage = document.getElementById(`day${day}-page`);
+            if (dayPage) {
+                dayPage.classList.remove('hidden');
+                initializeDay(day);
+            }
+        }
+
+        function showLockedMessage(day) {
+            alert(`Este día se desbloqueará el ${dayDates[day].toLocaleDateString('es-ES', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long'
+            })} a las 00:00`);
+        }
+
+        function initializeDay(day) {
+            switch(day) {
+                case 1: initWordle(); break;
+                case 2: initConnections(); break;
+                case 3: initDay3(); break;
+                case 4: initDay4(); break;
+                case 5: initMaze(); break;
+                case 6: initDay6(); break;
+            }
+        }
+
+        function showReward(day) {
+            const reward = document.getElementById(`day${day}-reward`);
+            if (reward) {
+                reward.classList.add('visible');
+                setTimeout(() => showTomorrow(day), 10000);
+            }
+        }
+
+        function showTomorrow(day) {
+            const tomorrow = document.getElementById(`day${day}-tomorrow`);
+            if (tomorrow) {
+                tomorrow.classList.add('visible');
+            }
+            
+            // Marcar día como completado y avanzar
+            if (!progress.completedDays.includes(day)) {
+                progress.completedDays.push(day);
+            }
+            
+            if (day < 6) {
+                progress.currentDay = day + 1;
+                saveProgress();
+                
+                // Auto-cargar el siguiente día si está desbloqueado
+                setTimeout(() => {
+                    if (isDayUnlocked(day + 1)) {
+                        loadDay(day + 1);
+                    }
+                }, 3000);
+            }
+        }
+
+        // ==================== DÍA 1: WORDLE ====================
+        let wordleState = {
+            targetWord: 'BESOS',
+            currentRow: 0,
+            currentCol: 0,
+            guesses: [],
+            gameOver: false
+        };
+
+        const spanishWords = [
+            'BESOS', 'BEBER', 'BELLO', 'BUENO', 'BUSCO', 'BARCO',
+            'BELLA', 'BANCA', 'BAJOS', 'BASES', 'BANCO', 'BANDA'
+        ];
+
+        function initWordle() {
+            createWordleGrid();
+            createKeyboard();
+        }
+
+        function createWordleGrid() {
+            const grid = document.getElementById('wordle-grid');
+            grid.innerHTML = '';
+            for (let i = 0; i < 6; i++) {
+                const row = document.createElement('div');
+                row.className = 'wordle-row';
+                row.id = `row-${i}`;
+                for (let j = 0; j < 5; j++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'wordle-cell';
+                    cell.id = `cell-${i}-${j}`;
+                    row.appendChild(cell);
+                }
+                grid.appendChild(row);
+            }
+        }
+
+        function createKeyboard() {
+            const keyboard = document.getElementById('keyboard');
+            const rows = [
+                ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
+                ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L', 'Ñ'],
+                ['ENTER', 'Z', 'X', 'C', 'V', 'B', 'N', 'M', '←']
+            ];
+
+            keyboard.innerHTML = '';
+            rows.forEach(row => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'keyboard-row';
+                row.forEach(key => {
+                    const keyBtn = document.createElement('button');
+                    keyBtn.className = key.length > 1 ? 'key wide' : 'key';
+                    keyBtn.textContent = key;
+                    keyBtn.onclick = () => handleKeyPress(key);
+                    rowDiv.appendChild(keyBtn);
+                });
+                keyboard.appendChild(rowDiv);
+            });
+        }
+
+        function handleKeyPress(key) {
+            if (wordleState.gameOver) return;
+
+            if (key === '←') {
+                if (wordleState.currentCol > 0) {
+                    wordleState.currentCol--;
+                    updateCell(wordleState.currentRow, wordleState.currentCol, '');
+                }
+            } else if (key === 'ENTER') {
+                if (wordleState.currentCol === 5) {
+                    submitWordleGuess();
+                }
+            } else if (wordleState.currentCol < 5) {
+                updateCell(wordleState.currentRow, wordleState.currentCol, key);
+                wordleState.currentCol++;
+            }
+        }
+
+        function updateCell(row, col, letter) {
+            const cell = document.getElementById(`cell-${row}-${col}`);
+            if (cell) cell.textContent = letter;
+        }
+
+        function submitWordleGuess() {
+            const row = wordleState.currentRow;
+            let guess = '';
+            for (let i = 0; i < 5; i++) {
+                const cell = document.getElementById(`cell-${row}-${i}`);
+                guess += cell.textContent;
+            }
+
+            if (!spanishWords.includes(guess)) {
+                showMessage('wordle-message', 'Palabra no válida', 'error');
+                return;
+            }
+
+            wordleState.guesses.push(guess);
+            checkWordleGuess(guess, row);
+
+            if (guess === wordleState.targetWord) {
+                wordleState.gameOver = true;
+                showMessage('wordle-message', '¡Correcto!', 'success');
+                setTimeout(() => showReward(1), 1000);
+            } else if (wordleState.currentRow === 5) {
+                wordleState.gameOver = true;
+                showMessage('wordle-message', `La palabra era: ${wordleState.targetWord}`, 'error');
+            } else {
+                wordleState.currentRow++;
+                wordleState.currentCol = 0;
+                document.getElementById('attempts').textContent = `Intentos restantes: ${6 - wordleState.currentRow}`;
+            }
+        }
+
+        function checkWordleGuess(guess, row) {
+            const target = wordleState.targetWord;
+            const letterCount = {};
+            
+            for (let char of target) {
+                letterCount[char] = (letterCount[char] || 0) + 1;
+            }
+
+            for (let i = 0; i < 5; i++) {
+                const cell = document.getElementById(`cell-${row}-${i}`);
+                const letter = guess[i];
+                
+                setTimeout(() => {
+                    if (letter === target[i]) {
+                        cell.classList.add('correct');
+                        letterCount[letter]--;
+                    } else if (target.includes(letter) && letterCount[letter] > 0) {
+                        cell.classList.add('present');
+                        letterCount[letter]--;
+                    } else {
+                        cell.classList.add('absent');
+                    }
+                }, i * 100);
+            }
+        }
+
+        // ==================== DÍA 2: CONNECTIONS ====================
+        let connectionsState = {
+            words: [
+                {text: 'CARTA', group: 0},
+                {text: 'POEMA', group: 0},
+                {text: 'NOTA', group: 0},
+                {text: 'DEDICATORIA', group: 0},
+                {text: 'ROSA', group: 1},
+                {text: 'TULIPÁN', group: 1},
+                {text: 'CLAVEL', group: 1},
+                {text: 'ORQUÍDEA', group: 1},
+                {text: 'BOMBÓN', group: 2},
+                {text: 'TRUFA', group: 2},
+                {text: 'FRESA', group: 2},
+                {text: 'TARTA', group: 2},
+                {text: 'CENA', group: 3},
+                {text: 'BAILE', group: 3},
+                {text: 'PASEO', group: 3},
+                {text: 'ATARDECER', group: 3}
+            ],
+            selected: [],
+            solvedGroups: [],
+            attempts: 4,
+            groupColors: ['purple', 'blue', 'green', 'yellow'],
+            groupNames: [
+                'Cosas de papel en San Valentín',
+                'Flores del amor',
+                'Dulces románticos',
+                'Momentos de pareja'
+            ]
+        };
+
+        function initConnections() {
+            shuffleArray(connectionsState.words);
+            renderConnections();
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function renderConnections() {
+            const grid = document.getElementById('connections-grid');
+            const solvedDiv = document.getElementById('solved-groups');
+            
+            grid.innerHTML = '';
+            solvedDiv.innerHTML = '';
+
+            // Mostrar grupos resueltos
+            connectionsState.solvedGroups.forEach(groupNum => {
+                const groupDiv = document.createElement('div');
+                groupDiv.className = `solved-group ${connectionsState.groupColors[groupNum]}`;
+                groupDiv.innerHTML = `<div style="grid-column: 1/-1; font-weight: 500; margin-bottom: 0.5rem;">${connectionsState.groupNames[groupNum]}</div>`;
+                
+                connectionsState.words
+                    .filter(w => w.group === groupNum)
+                    .forEach(word => {
+                        const wordDiv = document.createElement('div');
+                        wordDiv.textContent = word.text;
+                        groupDiv.appendChild(wordDiv);
+                    });
+                
+                solvedDiv.appendChild(groupDiv);
+            });
+
+            // Mostrar palabras restantes
+            connectionsState.words
+                .filter(w => !connectionsState.solvedGroups.includes(w.group))
+                .forEach(word => {
+                    const wordDiv = document.createElement('div');
+                    wordDiv.className = 'connection-word';
+                    wordDiv.textContent = word.text;
+                    wordDiv.onclick = () => toggleWord(word.text);
+                    if (connectionsState.selected.includes(word.text)) {
+                        wordDiv.classList.add('selected');
+                    }
+                    grid.appendChild(wordDiv);
+                });
+        }
+
+        function toggleWord(word) {
+            const index = connectionsState.selected.indexOf(word);
+            if (index > -1) {
+                connectionsState.selected.splice(index, 1);
+            } else if (connectionsState.selected.length < 4) {
+                connectionsState.selected.push(word);
+            }
+            renderConnections();
+        }
+
+        function submitGroup() {
+            if (connectionsState.selected.length !== 4) {
+                showMessage('connections-message', 'Selecciona exactamente 4 palabras', 'error');
+                return;
+            }
+
+            const selectedGroups = connectionsState.selected.map(word => 
+                connectionsState.words.find(w => w.text === word).group
+            );
+
+            const allSameGroup = selectedGroups.every(g => g === selectedGroups[0]);
+
+            if (allSameGroup) {
+                connectionsState.solvedGroups.push(selectedGroups[0]);
+                connectionsState.selected = [];
+                showMessage('connections-message', '¡Grupo correcto!', 'success');
+                
+                if (connectionsState.solvedGroups.length === 4) {
+                    setTimeout(() => showReward(2), 1000);
+                }
+                
+                renderConnections();
+            } else {
+                connectionsState.attempts--;
+                connectionsState.selected = [];
+                document.getElementById('connections-attempts').textContent = `Intentos restantes: ${connectionsState.attempts}`;
+                
+                if (connectionsState.attempts === 0) {
+                    showMessage('connections-message', 'Sin intentos. Recarga para intentar de nuevo.', 'error');
+                    document.getElementById('submit-group').disabled = true;
+                } else {
+                    showMessage('connections-message', 'Grupo incorrecto', 'error');
+                }
+                
+                renderConnections();
+            }
+        }
+
+        // ==================== DÍA 3: ADIVINANZA + CIFRADO ====================
+        function initDay3() {
+            // Ya está inicializado en el HTML
+        }
+
+        function checkRiddle() {
+            const answer = document.getElementById('riddle-answer').value.trim().toUpperCase();
+            if (answer === 'CONMIGO') {
+                showMessage('riddle-message', '¡Correcto! Ahora la parte 2...', 'success');
+                document.getElementById('day3-part1').style.opacity = '0.5';
+                setTimeout(() => {
+                    document.getElementById('day3-part2').classList.remove('hidden');
+                }, 1000);
+            } else {
+                showMessage('riddle-message', 'Sigue pensando...', 'error');
+            }
+        }
+
+        function checkCipher() {
+            const answer = document.getElementById('cipher-answer').value.trim().toUpperCase();
+            const normalized = answer.replace(/Á/g, 'A').replace(/É/g, 'E').replace(/Í/g, 'I').replace(/Ó/g, 'O').replace(/Ú/g, 'U');
+            
+            if (normalized === 'SAN VALENTIN' || answer === 'SAN VALENTÍN') {
+                showMessage('cipher-message', '¡Perfecto!', 'success');
+                setTimeout(() => showReward(3), 1000);
+            } else {
+                showMessage('cipher-message', 'Recuerda: cada letra está un paso adelante', 'error');
+            }
+        }
+
+        // ==================== DÍA 4: EMOJIS + SOPA DE LETRAS ====================
+        function initDay4() {
+            // Emojis ya están en HTML
+        }
+
+        function checkEmojis() {
+            const answers = {
+                emoji1: ['PAELLA'],
+                emoji2: ['TORTILLA'],
+                emoji3: ['GAZPACHO'],
+                emoji4: ['JAMON', 'JAMÓN']
+            };
+
+            let allCorrect = true;
+            for (let i = 1; i <= 4; i++) {
+                const input = document.getElementById(`emoji${i}`);
+                const value = input.value.trim().toUpperCase();
+                const normalized = value.replace(/Ó/g, 'O').replace(/Á/g, 'A');
+                
+                if (!answers[`emoji${i}`].includes(normalized)) {
+                    allCorrect = false;
+                    input.style.borderColor = '#c8948f';
+                } else {
+                    input.style.borderColor = '#8fae9a';
+                }
+            }
+
+            if (allCorrect) {
+                showMessage('emoji-message', '¡Todos correctos! Ahora la segunda parte...', 'success');
+                setTimeout(() => {
+                    document.getElementById('day4-part1').style.opacity = '0.5';
+                    document.getElementById('day4-part2').classList.remove('hidden');
+                    initWordSearch();
+                }, 1500);
+            } else {
+                showMessage('emoji-message', 'Revisa las respuestas en rojo', 'error');
+            }
+        }
+
+        let wordSearchState = {
+            words: ['TAPAS', 'MIGAS', 'CHURROS', 'CROQUETAS', 'PULPO'],
+            found: [],
+            grid: [],
+            selecting: false,
+            selectedCells: []
+        };
+
+        function initWordSearch() {
+            createWordSearchGrid();
+            displayWordsToFind();
+        }
+
+        function createWordSearchGrid() {
+            const size = 12;
+            wordSearchState.grid = Array(size).fill(null).map(() => Array(size).fill(''));
+            
+            // Colocar palabras
+            wordSearchState.words.forEach(word => placeWord(word));
+            
+            // Rellenar con letras aleatorias
+            const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            for (let i = 0; i < size; i++) {
+                for (let j = 0; j < size; j++) {
+                    if (wordSearchState.grid[i][j] === '') {
+                        wordSearchState.grid[i][j] = letters[Math.floor(Math.random() * letters.length)];
+                    }
+                }
+            }
+
+            renderWordSearch();
+        }
+
+        function placeWord(word) {
+            const size = 12;
+            // Solo horizontal (dirección derecha)
+            const dir = {dx: 0, dy: 1};
+            
+            let placed = false;
+            let attempts = 0;
+            
+            while (!placed && attempts < 100) {
+                const startX = Math.floor(Math.random() * size);
+                const startY = Math.floor(Math.random() * (size - word.length + 1)); // Asegurar que cabe horizontalmente
+                
+                if (canPlaceWord(word, startX, startY, dir.dx, dir.dy)) {
+                    for (let i = 0; i < word.length; i++) {
+                        wordSearchState.grid[startX + i * dir.dx][startY + i * dir.dy] = word[i];
+                    }
+                    placed = true;
+                }
+                attempts++;
+            }
+        }
+
+        function canPlaceWord(word, x, y, dx, dy) {
+            const size = 12;
+            for (let i = 0; i < word.length; i++) {
+                const newX = x + i * dx;
+                const newY = y + i * dy;
+                if (newX < 0 || newX >= size || newY < 0 || newY >= size) return false;
+                if (wordSearchState.grid[newX][newY] !== '' && wordSearchState.grid[newX][newY] !== word[i]) return false;
+            }
+            return true;
+        }
+
+        function renderWordSearch() {
+            const container = document.getElementById('word-search');
+            container.innerHTML = '';
+            
+            wordSearchState.grid.forEach((row, i) => {
+                row.forEach((letter, j) => {
+                    const cell = document.createElement('div');
+                    cell.className = 'ws-cell';
+                    cell.textContent = letter;
+                    cell.dataset.row = i;
+                    cell.dataset.col = j;
+                    
+                    cell.onmousedown = () => startSelection(i, j);
+                    cell.onmouseenter = () => continueSelection(i, j);
+                    cell.onmouseup = () => endSelection();
+                    
+                    container.appendChild(cell);
+                });
+            });
+
+            document.addEventListener('mouseup', endSelection);
+        }
+
+        function startSelection(row, col) {
+            wordSearchState.selecting = true;
+            wordSearchState.selectedCells = [{row, col}];
+            updateSelection();
+        }
+
+        function continueSelection(row, col) {
+            if (!wordSearchState.selecting) return;
+            
+            const last = wordSearchState.selectedCells[wordSearchState.selectedCells.length - 1];
+            if (last.row === row && last.col === col) return;
+            
+            wordSearchState.selectedCells.push({row, col});
+            updateSelection();
+        }
+
+        function endSelection() {
+            if (!wordSearchState.selecting) return;
+            wordSearchState.selecting = false;
+            
+            const word = wordSearchState.selectedCells.map(c => 
+                wordSearchState.grid[c.row][c.col]
+            ).join('');
+            
+            if (wordSearchState.words.includes(word) && !wordSearchState.found.includes(word)) {
+                wordSearchState.found.push(word);
+                markFoundWord();
+                displayWordsToFind();
+                
+                if (wordSearchState.found.length === wordSearchState.words.length) {
+                    document.getElementById('ws-complete').classList.remove('hidden');
+                }
+            }
+            
+            wordSearchState.selectedCells = [];
+            updateSelection();
+        }
+
+        function updateSelection() {
+            document.querySelectorAll('.ws-cell').forEach(cell => {
+                cell.classList.remove('selected');
+            });
+            
+            wordSearchState.selectedCells.forEach(({row, col}) => {
+                const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                if (cell && !cell.classList.contains('found')) {
+                    cell.classList.add('selected');
+                }
+            });
+        }
+
+        function markFoundWord() {
+            wordSearchState.selectedCells.forEach(({row, col}) => {
+                const cell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+                if (cell) {
+                    cell.classList.remove('selected');
+                    cell.classList.add('found');
+                }
+            });
+        }
+
+        function displayWordsToFind() {
+            const container = document.getElementById('words-to-find');
+            container.innerHTML = '';
+            
+            wordSearchState.words.forEach(word => {
+                const wordDiv = document.createElement('div');
+                wordDiv.className = 'word-item';
+                if (wordSearchState.found.includes(word)) {
+                    wordDiv.classList.add('found');
+                }
+                wordDiv.textContent = word;
+                container.appendChild(wordDiv);
+            });
+        }
+
+        function checkCuisine() {
+            const answer = document.getElementById('cuisine-answer').value.trim().toUpperCase();
+            const normalized = answer.replace(/Ñ/g, 'N');
+            
+            if (answer.includes('ESPAÑOLA') || answer.includes('ESPANOLA') || normalized.includes('ESPANOLA')) {
+                showMessage('cuisine-message', '¡Exacto!', 'success');
+                setTimeout(() => showReward(4), 1000);
+            } else {
+                showMessage('cuisine-message', 'Piensa en el origen de todos estos platos...', 'error');
+            }
+        }
+
+        // ==================== DÍA 5: LABERINTO ====================
+        let mazeState = {
+            questions: [
+                {
+                    text: 'Si la noche tuviera un ritmo, sería…',
+                    options: [
+                        {emoji: '⏳', text: 'Uno que no tenga prisa', correct: true},
+                        {emoji: '⏱️', text: 'Uno que pase rápido', correct: false},
+                        {emoji: '🔁', text: 'Uno que se repita siempre igual', correct: false}
+                    ]
+                },
+                {
+                    text: 'El sitio ideal debería invitar a…',
+                    options: [
+                        {emoji: '🪑', text: 'Cambiar de mesa', correct: false},
+                        {emoji: '💬', text: 'Quedarse hablando', correct: true},
+                        {emoji: '🚶‍♀️', text: 'Seguir caminando', correct: false}
+                    ]
+                },
+                {
+                    text: 'Al entrar, debería sentirse…',
+                    options: [
+                        {emoji: '🎉', text: 'Animación constante', correct: false},
+                        {emoji: '🧘', text: 'Calma compartida', correct: true},
+                        {emoji: '📢', text: 'Energía intensa', correct: false}
+                    ]
+                },
+                {
+                    text: 'Este sitio es especial porque…',
+                    options: [
+                        {emoji: '🍽️', text: 'La comida es rápida', correct: false},
+                        {emoji: '📍', text: 'Está de moda', correct: false},
+                        {emoji: '❤️', text: 'Se disfruta mejor acompañado', correct: true}
+                    ]
+                },
+                {
+                    text: 'Lo importante de esa noche será…',
+                    options: [
+                        {emoji: '👥', text: 'Conocer gente nueva', correct: false},
+                        {emoji: '⏰', text: 'Que todo salga perfecto', correct: false},
+                        {emoji: '🫂', text: 'Con quién la compartes', correct: true}
+                    ]
+                }
+            ],
+            currentQuestion: 0,
+            answers: []
+        };
+
+        function initMaze() {
+            renderMazeProgress();
+            renderMazeQuestion();
+        }
+
+        function renderMazeProgress() {
+            const progress = document.getElementById('maze-progress');
+            progress.innerHTML = '';
+            
+            for (let i = 0; i < mazeState.questions.length; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot';
+                if (i < mazeState.currentQuestion) {
+                    dot.classList.add('completed');
+                } else if (i === mazeState.currentQuestion) {
+                    dot.classList.add('active');
+                }
+                progress.appendChild(dot);
+            }
+        }
+
+        function renderMazeQuestion() {
+            const container = document.getElementById('maze-container');
+            container.innerHTML = '';
+            
+            if (mazeState.currentQuestion >= mazeState.questions.length) {
+                return;
+            }
+            
+            const q = mazeState.questions[mazeState.currentQuestion];
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'maze-question';
+            
+            const questionText = document.createElement('div');
+            questionText.className = 'maze-question-text';
+            questionText.innerHTML = `<strong>${mazeState.currentQuestion + 1}️⃣ ${q.text}</strong>`;
+            questionDiv.appendChild(questionText);
+            
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'maze-options';
+            
+            q.options.forEach((option, i) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'maze-option';
+                optionDiv.innerHTML = `<span>${option.emoji}</span> ${option.text}`;
+                optionDiv.onclick = () => selectMazeOption(option.correct);
+                optionsDiv.appendChild(optionDiv);
+            });
+            
+            questionDiv.appendChild(optionsDiv);
+            container.appendChild(questionDiv);
+        }
+
+        function selectMazeOption(isCorrect) {
+            if (isCorrect) {
+                mazeState.answers.push(true);
+                mazeState.currentQuestion++;
+                
+                if (mazeState.currentQuestion >= mazeState.questions.length) {
+                    showMessage('maze-message', '¡Has encontrado el camino correcto!', 'success');
+                    setTimeout(() => showReward(5), 1000);
+                } else {
+                    renderMazeProgress();
+                    renderMazeQuestion();
+                }
+            } else {
+                showMessage('maze-message', 'Este no es el camino. Inténtalo de nuevo.', 'error');
+                setTimeout(() => {
+                    document.getElementById('maze-message').innerHTML = '';
+                }, 2000);
+            }
+        }
+
+        // ==================== DÍA 6: ACRÓSTICO ====================
+        function initDay6() {
+            // Ya inicializado en HTML
+        }
+
+        function checkFinalAnswer() {
+            const answer = document.getElementById('final-answer').value.trim().toUpperCase();
+            const normalized = answer.replace(/Í/g, 'I').replace(/Ó/g, 'O');
+            
+            if (normalized.includes('ALBEDRIO') || answer.includes('ALBEDRÍO')) {
+                showMessage('final-message', '¡Lo encontraste!', 'success');
+                setTimeout(() => {
+                    showReward(6);
+                    document.getElementById('day6-final').classList.add('visible');
+                }, 1000);
+            } else {
+                showMessage('final-message', 'Lee las primeras letras con cuidado...', 'error');
+            }
+        }
+
+        // ==================== UTILIDADES ====================
+        function showMessage(elementId, text, type) {
+            const msgDiv = document.getElementById(elementId);
+            msgDiv.innerHTML = `<div class="message ${type}">${text}</div>`;
+            setTimeout(() => {
+                msgDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        // ==================== INICIO ====================
+        window.onload = function() {
+            // Limpiar localStorage para pruebas (COMENTAR ESTA LÍNEA EN PRODUCCIÓN)
+            // localStorage.removeItem('journeyProgress');
+            
+            // Si no ha empezado, mostrar la intro
+            if (!progress.started) {
+                document.getElementById('intro-page').classList.remove('hidden');
+                // Asegurar que los días están ocultos
+                for (let i = 1; i <= 6; i++) {
+                    const dayPage = document.getElementById(`day${i}-page`);
+                    if (dayPage) dayPage.classList.add('hidden');
+                }
+            } else {
+                document.getElementById('intro-page').classList.add('hidden');
+                loadDay(progress.currentDay);
+            }
+        };
+    </script>
+</body>
+</html>
