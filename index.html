@@ -954,14 +954,19 @@
                     <strong>Para llegar al final, tienes que descubrir el nombre del sitio.</strong>
                 </div>
                 <div class="hint-text" style="line-height: 2.2; margin: 2rem 0;">
-                    <strong>A</strong>mbiente tranquilo<br>
-                    <strong>L</strong>uz cálida al caer la noche<br>
-                    <strong>B</strong>ocados que saben a quedarse<br>
-                    <strong>E</strong>spacio para hablar sin prisa<br>
-                    <strong>D</strong>etalles cuidados<br>
+                    <strong>A</strong>mbiente cuidado<br>
+                    <strong>L</strong>uz tenue al caer la noche<br>
+                    <strong>T</strong>iempos que se alargan sin prisa<br>
+                    <strong>A</strong>romas que se recuerdan<br>
+                    <br>
+                    <strong>C</strong>alma compartida<br>
+                    <strong>O</strong>casión especial<br>
+                    <strong>S</strong>abores trabajados<br>
+                    <strong>T</strong>odo invita a quedarse<br>
+                    <br>
+                    <strong>U</strong>n sitio elegido<br>
                     <strong>R</strong>isas que encajan<br>
-                    <strong>Í</strong>ntimo sin ser pequeño<br>
-                    <strong>O</strong>casión para compartir
+                    <strong>A</strong>lgo que merece celebrarse
                 </div>
                 <div class="hint-text" style="text-align: center; font-style: italic;">
                     <em>No es una palabra común.<br>
@@ -975,11 +980,11 @@
             <div id="day6-reward" class="section reward-box">
                 <div class="section-title">🎁 Recompensa</div>
                 <div class="hint-text">
-                    <strong>ALBEDRÍO</strong>
+                    <strong>ALTA COSTURA</strong>
                 </div>
                 <div class="hint-text">
-                    Murcia.<br>
-                    Plaza de Santa Eulalia.
+                    C. San Nicolás, 1<br>
+                    30005 Murcia
                 </div>
             </div>
 
@@ -988,7 +993,7 @@
                 <div class="final-message">
                     <h3>Sábado 14 de febrero</h3>
                     <p><strong>A las 21:30</strong></p>
-                    <p><strong>En Albedrío</strong></p>
+                    <p><strong>En Alta Costura</strong></p>
                     <p style="margin-top: 2rem;">Yo llevo las ganas.<br>Tú solo di que sí.</p>
                 </div>
             </div>
@@ -1044,10 +1049,40 @@
             // Ocultar todas las páginas
             document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
             
+            // Limpiar estados visuales de todos los días
+            for (let i = 1; i <= 6; i++) {
+                // Ocultar recompensas y tomorrow boxes
+                const reward = document.getElementById(`day${i}-reward`);
+                const tomorrow = document.getElementById(`day${i}-tomorrow`);
+                if (reward) {
+                    reward.classList.remove('visible');
+                    reward.style.display = 'none';
+                }
+                if (tomorrow) {
+                    tomorrow.classList.remove('visible');
+                    tomorrow.style.display = 'none';
+                }
+                
+                // Limpiar mensajes
+                const messages = ['wordle-message', 'connections-message', 'riddle-message', 'cipher-message', 
+                                'emoji-message', 'cuisine-message', 'maze-message', 'final-message'];
+                messages.forEach(msgId => {
+                    const msg = document.getElementById(msgId);
+                    if (msg) msg.innerHTML = '';
+                });
+            }
+            
             // Mostrar la página del día
             const dayPage = document.getElementById(`day${day}-page`);
             if (dayPage) {
                 dayPage.classList.remove('hidden');
+                
+                // Resetear los reward y tomorrow boxes del día actual
+                const reward = document.getElementById(`day${day}-reward`);
+                const tomorrow = document.getElementById(`day${day}-tomorrow`);
+                if (reward) reward.style.display = 'block';
+                if (tomorrow) tomorrow.style.display = 'block';
+                
                 initializeDay(day);
             }
         }
@@ -1061,13 +1096,109 @@
         }
 
         function initializeDay(day) {
-            switch(day) {
-                case 1: initWordle(); break;
-                case 2: initConnections(); break;
-                case 3: initDay3(); break;
-                case 4: initDay4(); break;
-                case 5: initMaze(); break;
-                case 6: initDay6(); break;
+            // Resetear estados de los juegos
+            if (day === 1) {
+                wordleState = {
+                    targetWord: 'BESOS',
+                    currentRow: 0,
+                    currentCol: 0,
+                    guesses: [],
+                    gameOver: false
+                };
+                initWordle();
+            } else if (day === 2) {
+                connectionsState = {
+                    words: [
+                        {text: 'CARTA', group: 0},
+                        {text: 'POEMA', group: 0},
+                        {text: 'NOTA', group: 0},
+                        {text: 'DEDICATORIA', group: 0},
+                        {text: 'ROSA', group: 1},
+                        {text: 'TULIPÁN', group: 1},
+                        {text: 'CLAVEL', group: 1},
+                        {text: 'ORQUÍDEA', group: 1},
+                        {text: 'BOMBÓN', group: 2},
+                        {text: 'TRUFA', group: 2},
+                        {text: 'FRESA', group: 2},
+                        {text: 'TARTA', group: 2},
+                        {text: 'CENA', group: 3},
+                        {text: 'BAILE', group: 3},
+                        {text: 'PASEO', group: 3},
+                        {text: 'ATARDECER', group: 3}
+                    ],
+                    selected: [],
+                    solvedGroups: [],
+                    attempts: 4,
+                    groupColors: ['purple', 'blue', 'green', 'yellow'],
+                    groupNames: [
+                        'Cosas de papel en San Valentín',
+                        'Flores del amor',
+                        'Dulces románticos',
+                        'Momentos de pareja'
+                    ]
+                };
+                initConnections();
+            } else if (day === 3) {
+                initDay3();
+            } else if (day === 4) {
+                wordSearchState = {
+                    words: ['TAPAS', 'MIGAS', 'CHURROS', 'CROQUETAS', 'PULPO'],
+                    found: [],
+                    grid: [],
+                    selecting: false,
+                    selectedCells: []
+                };
+                initDay4();
+            } else if (day === 5) {
+                mazeState = {
+                    questions: [
+                        {
+                            text: 'Si la noche tuviera un ritmo, sería…',
+                            options: [
+                                {emoji: '⏳', text: 'Uno que no tenga prisa', correct: true},
+                                {emoji: '⏱️', text: 'Uno que pase rápido', correct: false},
+                                {emoji: '🔁', text: 'Uno que se repita siempre igual', correct: false}
+                            ]
+                        },
+                        {
+                            text: 'El sitio ideal debería invitar a…',
+                            options: [
+                                {emoji: '🪑', text: 'Cambiar de mesa', correct: false},
+                                {emoji: '💬', text: 'Quedarse hablando', correct: true},
+                                {emoji: '🚶‍♀️', text: 'Seguir caminando', correct: false}
+                            ]
+                        },
+                        {
+                            text: 'Al entrar, debería sentirse…',
+                            options: [
+                                {emoji: '🎉', text: 'Animación constante', correct: false},
+                                {emoji: '🧘', text: 'Calma compartida', correct: true},
+                                {emoji: '📢', text: 'Energía intensa', correct: false}
+                            ]
+                        },
+                        {
+                            text: 'Este sitio es especial porque…',
+                            options: [
+                                {emoji: '🍽️', text: 'La comida es rápida', correct: false},
+                                {emoji: '📍', text: 'Está de moda', correct: false},
+                                {emoji: '❤️', text: 'Se disfruta mejor acompañado', correct: true}
+                            ]
+                        },
+                        {
+                            text: 'Lo importante de esa noche será…',
+                            options: [
+                                {emoji: '👥', text: 'Conocer gente nueva', correct: false},
+                                {emoji: '⏰', text: 'Que todo salga perfecto', correct: false},
+                                {emoji: '🫂', text: 'Con quién la compartes', correct: true}
+                            ]
+                        }
+                    ],
+                    currentQuestion: 0,
+                    answers: []
+                };
+                initMaze();
+            } else if (day === 6) {
+                initDay6();
             }
         }
 
@@ -1374,7 +1505,16 @@
 
         // ==================== DÍA 3: ADIVINANZA + CIFRADO ====================
         function initDay3() {
-            // Ya está inicializado en el HTML
+            // Resetear campos
+            document.getElementById('riddle-answer').value = '';
+            document.getElementById('cipher-answer').value = '';
+            document.getElementById('riddle-message').innerHTML = '';
+            document.getElementById('cipher-message').innerHTML = '';
+            
+            // Mostrar parte 1, ocultar parte 2
+            document.getElementById('day3-part1').classList.remove('hidden');
+            document.getElementById('day3-part1').style.opacity = '1';
+            document.getElementById('day3-part2').classList.add('hidden');
         }
 
         function checkRiddle() {
@@ -1404,7 +1544,20 @@
 
         // ==================== DÍA 4: EMOJIS + SOPA DE LETRAS ====================
         function initDay4() {
-            // Emojis ya están en HTML
+            // Resetear campos de emojis
+            for (let i = 1; i <= 4; i++) {
+                const input = document.getElementById(`emoji${i}`);
+                if (input) {
+                    input.value = '';
+                    input.style.borderColor = '';
+                }
+            }
+            document.getElementById('emoji-message').innerHTML = '';
+            
+            // Mostrar parte 1, ocultar parte 2
+            document.getElementById('day4-part1').classList.remove('hidden');
+            document.getElementById('day4-part1').style.opacity = '1';
+            document.getElementById('day4-part2').classList.add('hidden');
         }
 
         function checkEmojis() {
@@ -1741,14 +1894,15 @@
 
         // ==================== DÍA 6: ACRÓSTICO ====================
         function initDay6() {
-            // Ya inicializado en HTML
+            document.getElementById('final-answer').value = '';
+            document.getElementById('final-message').innerHTML = '';
         }
 
         function checkFinalAnswer() {
             const answer = document.getElementById('final-answer').value.trim().toUpperCase();
-            const normalized = answer.replace(/Í/g, 'I').replace(/Ó/g, 'O');
+            const normalized = answer.replace(/Á/g, 'A').replace(/É/g, 'E').replace(/Í/g, 'I').replace(/Ó/g, 'O').replace(/Ú/g, 'U');
             
-            if (normalized.includes('ALBEDRIO') || answer.includes('ALBEDRÍO')) {
+            if (normalized.includes('ALTA COSTURA') || answer.includes('ALTA COSTURA') || normalized === 'ALTACOSTURA') {
                 showMessage('final-message', '¡Lo encontraste!', 'success');
                 setTimeout(() => {
                     showReward(6);
@@ -1770,7 +1924,7 @@
 
         // ==================== INICIO ====================
         window.onload = function() {
-            // Limpiar localStorage para pruebas (COMENTAR ESTA LÍNEA EN PRODUCCIÓN)
+            // Limpiar localStorage para pruebas (DESACTIVADO EN VERSIÓN FINAL)
             // localStorage.removeItem('journeyProgress');
             
             // Si no ha empezado, mostrar la intro
